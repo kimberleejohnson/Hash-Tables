@@ -7,32 +7,21 @@ class LinkedPair:
         self.value = value
         self.next = None
 
-class HashTable:
-    '''
-    A hash table that with `capacity` buckets
-    that accepts string keys
-    '''
+class HashTable: 
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
 
-
+    #Googled djb2 hashing, goodmath.org pointed me here 
     def _hash(self, key):
-        '''
-        Hash an arbitrary key and return an integer.
-
-        You may replace the Python hash with DJB2 as a stretch goal.
-        '''
+        # Setting the hash as a prime 
+        #hash = 5381
+        # Iterating arithmetic based on string values 
+        ## ord gets an integer representing Unicode point 
+        #for c in key: 
+            #hash = (hash *33) + ord(c)
+        # Return integer
         return hash(key)
-
-
-    def _hash_djb2(self, key):
-        '''
-        Hash an arbitrary key using DJB2 hash
-
-        OPTIONAL STRETCH: Research and implement DJB2
-        '''
-        pass
 
 
     def _hash_mod(self, key):
@@ -51,9 +40,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # Establishing an index 
+        index = self._hash_mod(key) 
 
+        # Displays a warning if there is a value that will be overwritten 
+        if self.storage[index] is not None: 
+            print("Heads up! You're about to overwrite an existing value.")
 
+        # Create a new key/value pair 
+        self.storage[index] = LinkedPair(key, value)
 
     def remove(self, key):
         '''
@@ -63,7 +58,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash(key)
+
+        # If there is actually no value there, print a warning 
+        if self.storage[index].value == None or self.storage[index].key != key: 
+            print("Warning! That key does not exist.")
+        # Otherwise, remove the key/value pair by setting LinkedPair values to None
+        else: 
+            self.storage[index] = LinkedPair(None, None)
 
 
     def retrieve(self, key):
@@ -74,8 +76,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash(key)
 
+        if self.storage[index] is not None and self.storage[index].key == key: 
+            return self.storage[index].value
+        else: 
+            return None 
 
     def resize(self):
         '''
@@ -84,7 +90,10 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        
+        # Create new table self.capacity * 2 
+        # Take values out of old, put in new 
+        #Hash values are now different, because _hash_mod depends 
 
 
 
@@ -107,7 +116,7 @@ if __name__ == "__main__":
     ht.resize()
     new_capacity = len(ht.storage)
 
-    print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+    # print(f"\nResized from {old_capacity} to {new_capacity}.\n")
 
     # Test if data intact after resizing
     print(ht.retrieve("line_1"))
